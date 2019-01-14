@@ -21,11 +21,6 @@ app.get('/', (req, res) => res.send('Hello World!'))
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
 
-app.get("/url2", (req, res, next) => {
-    res.json(["Tony","Lisa","Michael","Ginger","Food"]);
-   });
-
-
    app.post('/url', function (req, res) {
     res.send('POST request to homepage');
     const name = req.body.name
