@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+
+<meta name="robots" content="noindex">
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Memento-sr</title>
+  <!-- UIkit CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-rc.26/css/uikit.min.css" />
+
+<!-- UIkit JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-rc.26/js/uikit.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-rc.26/js/uikit-icons.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.7.3/firebase.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.5.21/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.5.21/dist/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<style>
+img{width:20vw}
+
+.unknown{color:red;}
+html,body{margin:0;padding:0}
+
+</style>
+<script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.11.2/build/alertify.min.js"></script>
+<!-- CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.11.2/build/css/alertify.min.css"/>
+<!-- Default theme -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.11.2/build/css/themes/default.min.css"/>
+</head>
+<body> <div id="app"><nav class="uk-navbar-container uk-margin" uk-navbar>
+  <div class="uk-navbar-center">
+
+    
+      <a class="uk-navbar-item uk-logo" href="#">Kioku 記憶</a>
+      
+
+  </div>
+</nav>
+ 
+<div class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-2@s uk-margin" uk-grid>
+  <div class="uk-card-media-left uk-cover-container">
+      <img id="img" src="images/light.jpg" alt="" uk-cover>
+      <canvas width="600" height="400"></canvas>
+  </div>
+  <div>
+      <div class="uk-card-body">
+          <h3 class="uk-card-title name">{{name}}</h3>
+          <ul class="uk-list uk-list-divider">
+            <li><b>Relation:</b> {{data.rel}}</li>
+           
+            <li><b>Age:</b> {{data.age}}</li>
+            <li><b>Phone:</b> {{data.phone}}</li>
+            <li><b>Location:</b> {{data.add}}</li>
+            <li><b>Biography:</b> {{data.blurb}}</li>
+        </ul>  </div>
+  </div>
+</div>
+
+  </div>
+</div>
+
+<script id="jsbin-javascript">
+
+
+
+const config = {
+    apiKey: "AIzaSyAOiCp52hQICyWj1JMa_AHVzBaPvGFgmtQ",
+    authDomain: "memento-sr.firebaseapp.com",
+    databaseURL: "https://memento-sr.firebaseio.com",
+    projectId: "memento-sr",
+    storageBucket: "memento-sr.appspot.com",
+    messagingSenderId: "210424874611"
+  };
+  firebase.initializeApp(config);
+  var database = firebase.database()
+
+
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    name: 'Hello Vue!',
+    filename:"hellowvue",
+    data:{}
+  }
+})
+
+database.ref("name").on("value",function(ref){
+$(".name").removeClass("unknown");
+  $("img:not(#img)").remove();
+ app.name=(ref.val())
+ app.filename=ref.val().toLowerCase();
+ if(app.filename=="unknown"){
+  $(".name").addClass("unknown");
+
+ }
+  app.filename = app.filename.replace(/\s/g, '');
+
+ var refer = "info/"+app.filename;
+console.log(refer);
+ database.ref(refer).once("value",function(dat){
+app.data=dat.val();
+if(dat.val()==null){
+app.data={};
+
+}
+console.log(app.data);
+
+ });
+  
+  var index = 1;
+var tempImg = new Image();
+tempImg.onload = function(){
+   appendImage();
+}
+var tryLoadImage = function( index ){
+   tempImg.src = app.filename+'/' + index + '.jpg';
+}
+var appendImage = function(){
+   var img = document.createElement('img');
+   img.src = tempImg.src;
+   document.body.appendChild( img )
+   tryLoadImage( index++ )
+}
+tryLoadImage( index );
+
+var s = app.filename+'/' + 1 + '.jpg';
+  
+$("#img").attr("src",s);
+  
+});
+var myArray=["Take your Blood Pressure Pills with the white cap!", "Meet Anna at 6pm ", "today is a good day to do some arts and crafts. Try Knitting", "Medical Check Up", "Yasutaka is Coming at 5pm",  "Take Vitamin D Tablet with the Green Label"];
+setInterval(function(){
+  
+  
+  
+  var rand = myArray[Math.floor(Math.random() * myArray.length)]; 
+  var msg = new SpeechSynthesisUtterance(rand);
+window.speechSynthesis.speak(msg);alertify.error("Reminder "+rand);},10000);
+
+
+</script>
+
+
+</body>
+</html>
